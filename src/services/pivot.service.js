@@ -8,39 +8,47 @@ export function getUsersPivots(userId) {
   return userPivots;
 }
 
-export function getPivotById(userId, pivotId) {
-  const pivot = pivots.find((p) => p.id === pivotId);
+export function findPivotById(pivoId) {
+  return pivots.find((p) => p.id === pivoId);
+}
 
-  if (!pivot || pivot.userId !== userId) {
-    throw new Error("pivo nao encontrado");
+export function getPivotById(userId, pivotId) {
+  const pivot = findPivotById(pivotId);
+
+  if (!pivot) {
+    throw new Error("Pivo não encontrado (findPivotById");
+  }
+
+  if (pivot.userId !== userId) {
+    throw new Error("Pivo não pertence ao usuário (findPivotById)");
   }
 
   return pivot;
 }
 
-export function createPivo(userId, data) {
-  const pivot = {
+export function createPivot(userId, pivotData) {
+  const newPivot = {
     id: randomUUID(),
-    description: data.description,
-    flowRate: data.flowRate,
-    minApplicationDepth: data.minApplicationDepth,
+    description: pivotData.description,
+    flowRate: pivotData.flowRate,
+    minApplicationDepth: pivotData.minApplicationDepth,
     userId,
   };
 
-  pivots.push(pivot);
+  pivots.push(newPivot);
 
-  return pivot;
+  return newPivot;
 }
 
-export function updatePivo(userId, pivoId, data) {
+export function updatePivot(userId, pivoId, pivotData) {
   const pivot = getPivotById(userId, pivoId);
 
-  Object.assign(pivot, data);
+  Object.assign(pivot, pivotData);
 
   return pivot;
 }
 
-export function removePivo(userId, pivotId) {
+export function deletePivot(userId, pivotId) {
   const pivot = getPivotById(userId, pivotId);
   const index = pivots.indexOf(pivot);
 
