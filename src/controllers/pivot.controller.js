@@ -1,16 +1,14 @@
 import * as pivotService from "../services/pivot.service.js";
 
-// até ter JWT
-const USER_ID = "user-123";
-
 export async function getUsersPivots(request, response) {
-  const pivots = pivotService.getUsersPivots(USER_ID);
+  const userId = request.userId;
+  const pivots = pivotService.getUsersPivots(userId);
 
   response.status(200).json(pivots);
 }
 
 export async function getPivotById(request, response) {
-  const userId = USER_ID;
+  const userId = request.userId;
   const pivotId = request.params.id;
 
   const pivot = pivotService.getPivotById(userId, pivotId);
@@ -24,12 +22,13 @@ export async function getPivotById(request, response) {
 }
 
 export async function createPivot(request, response) {
+  const userId = request.userId;
   const { description, flowRate, minApplicationDepth } = request.body;
 
   if (!description || !flowRate || !minApplicationDepth)
     return response.status(400).json({ message: "Campos obrigatórios faltantes" });
 
-  const registerPivot = pivotService.createPivot(USER_ID, {
+  const registerPivot = pivotService.createPivot(userId, {
     description,
     flowRate,
     minApplicationDepth,
@@ -43,7 +42,7 @@ export async function createPivot(request, response) {
 
 export async function updatePivot(request, response) {
   const dataUpdatePivot = request.body;
-  const userId = USER_ID;
+  const userId = request.userId;
   const pivotId = request.params.id;
 
   const updatePivot = pivotService.updatePivot(userId, pivotId, dataUpdatePivot);
@@ -55,7 +54,7 @@ export async function updatePivot(request, response) {
 }
 
 export async function deletePivot(request, response) {
-  const userId = USER_ID;
+  const userId = request.userId;
   const pivotId = request.params.id;
 
   const removePivot = pivotService.deletePivot(userId, pivotId);
